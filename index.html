@@ -1,0 +1,1352 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+  <title>ياكوزا DZ - نظام إدارة العصابة</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* ========== نفس تصميم تطبيق "إدارة الأنشطة التدريبية" الأصلي ========== */
+    :root {
+      --primary: #6a0dad;
+      --primary-light: #8a2be2;
+      --secondary: #ff8c00;
+      --secondary-light: #ffa500;
+      --accent: #ff4500;
+      --accent-light: #ff6347;
+      --dark: #1a1a1a;
+      --dark-light: #2d2d2d;
+      --light: #f5f5f5;
+      --gray: #a0a0a0;
+      --success: #27ae60;
+      --success-light: #58d68d;
+      --warning: #f39c12;
+      --gradient: linear-gradient(135deg, var(--primary), var(--secondary));
+      --gradient-dark: linear-gradient(135deg, var(--dark), var(--primary));
+      --gradient-accent: linear-gradient(135deg, var(--secondary), var(--accent));
+      --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      --hover-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Segoe UI', 'Tajawal', sans-serif;
+      background: linear-gradient(135deg, var(--dark) 0%, var(--dark-light) 100%);
+      color: var(--light);
+      line-height: 1.6;
+      min-height: 100vh;
+      overflow-x: hidden;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      -webkit-touch-callout: none;
+    }
+    
+    input, textarea {
+      -webkit-user-select: text !important;
+      -moz-user-select: text !important;
+      -ms-user-select: text !important;
+      user-select: text !important;
+      -webkit-touch-callout: default !important;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    header {
+      background: rgba(26, 26, 26, 0.9);
+      backdrop-filter: blur(10px);
+      color: white;
+      padding: 1.5rem 0;
+      text-align: center;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+      border-bottom: 1px solid rgba(106, 13, 173, 0.3);
+      border-radius: 32px;
+      margin-bottom: 25px;
+    }
+    
+    .logo h1 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    
+    .logo .tagline {
+      font-size: 1rem;
+      font-weight: 600;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-top: 5px;
+    }
+    
+    h1, h2, h3, h4 {
+      margin-bottom: 1rem;
+      color: white;
+      font-weight: 700;
+    }
+    
+    .hidden {
+      display: none !important;
+    }
+    
+    .btn {
+      display: inline-block;
+      padding: 10px 16px;
+      margin: 5px;
+      border: none;
+      border-radius: 8px;
+      background: var(--gradient);
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: var(--card-shadow);
+      font-size: 0.85rem;
+      flex: 1;
+      text-align: center;
+    }
+    
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--hover-shadow);
+    }
+    
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--secondary);
+      color: var(--secondary);
+    }
+    
+    .btn-outline:hover {
+      background: var(--secondary);
+      color: white;
+    }
+    
+    .btn-success {
+      background: var(--success);
+    }
+    
+    .btn-danger {
+      background: var(--accent);
+    }
+    
+    .btn-warning {
+      background: var(--warning);
+    }
+    
+    .btn-sm {
+      padding: 8px 12px;
+      font-size: 0.8rem;
+    }
+    
+    .card {
+      background: rgba(45, 45, 45, 0.7);
+      border-radius: 12px;
+      padding: 18px;
+      margin: 15px 0;
+      box-shadow: var(--card-shadow);
+      transition: all 0.3s ease;
+      border: 1px solid rgba(106, 13, 173, 0.2);
+      backdrop-filter: blur(10px);
+    }
+    
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--hover-shadow);
+      border-color: rgba(106, 13, 173, 0.5);
+    }
+    
+    .form-group {
+      margin-bottom: 15px;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: bold;
+      color: var(--light);
+      font-size: 0.9rem;
+    }
+    
+    .form-control {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      font-size: 14px;
+      background: rgba(255, 255, 255, 0.05);
+      color: white;
+    }
+    
+    .form-control:focus {
+      border-color: var(--primary);
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(106, 13, 173, 0.3);
+    }
+    
+    .alert {
+      padding: 12px;
+      margin: 12px 0;
+      border-radius: 8px;
+      font-size: 0.9rem;
+    }
+    
+    .alert-error {
+      background-color: rgba(231, 76, 60, 0.2);
+      color: #f8d7da;
+      border: 1px solid rgba(231, 76, 60, 0.3);
+    }
+    
+    .page {
+      animation: fadeIn 0.5s ease;
+    }
+    
+    .main-screen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 80vh;
+      padding: 2rem;
+      text-align: center;
+    }
+    
+    .button-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+      margin-top: 2rem;
+    }
+    
+    .main-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 240px;
+      height: 240px;
+      background: rgba(45, 45, 45, 0.7);
+      border-radius: 15px;
+      box-shadow: var(--card-shadow);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      text-align: center;
+      padding: 1.5rem;
+      border: 1px solid rgba(106, 13, 173, 0.2);
+      backdrop-filter: blur(10px);
+    }
+    
+    .main-btn:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--hover-shadow);
+      border-color: rgba(106, 13, 173, 0.5);
+    }
+    
+    .main-btn i {
+      font-size: 3.5rem;
+      margin-bottom: 1rem;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 0 15px rgba(106, 13, 173, 0.5));
+    }
+    
+    .main-btn h2 {
+      font-size: 1.4rem;
+      margin-bottom: 0.8rem;
+      color: white;
+      font-weight: 700;
+    }
+    
+    .main-btn p {
+      color: var(--gray);
+      font-size: 0.9rem;
+    }
+    
+    .leader-sidebar {
+      background: var(--gradient-dark);
+      color: white;
+      padding: 15px;
+      border-radius: 12px;
+      margin-bottom: 15px;
+      box-shadow: var(--card-shadow);
+    }
+    
+    .leader-sidebar h3 {
+      color: white;
+      margin-bottom: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      padding-bottom: 10px;
+      font-size: 1.1rem;
+    }
+    
+    .sidebar-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    
+    .stat-box {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 12px;
+      border-radius: 10px;
+      text-align: center;
+    }
+    
+    .stat-number {
+      font-size: 1.5rem;
+      font-weight: bold;
+      background: linear-gradient(135deg, #fff, #ccc);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    
+    .stat-label {
+      font-size: 0.8rem;
+      opacity: 0.9;
+    }
+    
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 15px;
+      margin-top: 15px;
+    }
+    
+    .team-card, .member-card-simple {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 16px;
+      padding: 15px;
+      border-right: 4px solid var(--secondary);
+      margin-bottom: 10px;
+    }
+    
+    .team-name {
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-bottom: 6px;
+      color: var(--secondary);
+    }
+    
+    .team-description {
+      font-size: 0.85rem;
+      color: var(--gray);
+      margin-bottom: 10px;
+      padding-bottom: 6px;
+      border-bottom: 1px dashed rgba(255,255,255,0.1);
+    }
+    
+    .team-members-list {
+      max-height: 160px;
+      overflow-y: auto;
+      background: rgba(0,0,0,0.2);
+      border-radius: 12px;
+      padding: 6px;
+      margin-top: 5px;
+    }
+    
+    .member-name-item {
+      padding: 4px 6px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    
+    .member-name-item i {
+      font-size: 0.65rem;
+      color: var(--secondary);
+      width: 18px;
+    }
+    
+    .team-actions {
+      margin-top: 12px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    
+    .member-card-simple {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    
+    .badge {
+      background: var(--primary);
+      padding: 3px 8px;
+      border-radius: 40px;
+      font-size: 0.65rem;
+    }
+    
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #1e293b;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 50px;
+      z-index: 2000;
+      animation: fadeOut 2s forwards;
+      font-size: 0.85rem;
+      white-space: nowrap;
+    }
+    
+    @keyframes fadeOut {
+      0% { opacity: 1; }
+      80% { opacity: 1; }
+      100% { opacity: 0; visibility: hidden; }
+    }
+    
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(12px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 3000;
+      display: none;
+    }
+    
+    .modal-content {
+      background: linear-gradient(135deg, #1a1a2e, #0f0f1a);
+      border-radius: 24px;
+      padding: 20px;
+      width: 92%;
+      max-width: 550px;
+      max-height: 85vh;
+      overflow-y: auto;
+      border: 1px solid var(--secondary);
+    }
+    
+    .selected-items {
+      background: rgba(0,0,0,0.3);
+      border-radius: 16px;
+      padding: 8px;
+      margin: 8px 0;
+      min-height: 45px;
+    }
+    
+    .selected-tag {
+      background: var(--gradient);
+      color: white;
+      padding: 4px 12px;
+      border-radius: 40px;
+      font-size: 0.7rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin: 3px;
+    }
+    
+    .remove-tag {
+      cursor: pointer;
+      background: rgba(0,0,0,0.5);
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.6rem;
+    }
+    
+    .limit-alert {
+      background: rgba(231,76,60,0.15);
+      border-right: 3px solid var(--accent);
+      padding: 6px;
+      border-radius: 10px;
+      margin-top: 6px;
+      font-size: 0.7rem;
+    }
+    
+    .maintenance-screen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 70vh;
+      text-align: center;
+    }
+    
+    .maintenance-screen i {
+      font-size: 5rem;
+      color: #ff8c00;
+      margin-bottom: 20px;
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.1); opacity: 0.8; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    
+    .maintenance-screen h2 {
+      font-size: 2rem;
+      margin-bottom: 15px;
+      color: #ff8c00;
+    }
+    
+    footer {
+      text-align: center;
+      padding: 20px;
+      background: var(--gradient-dark);
+      color: white;
+      margin-top: 30px;
+      box-shadow: 0 -3px 15px rgba(0, 0, 0, 0.2);
+      font-size: 0.9rem;
+    }
+    
+    @media (max-width: 768px) {
+      .container {
+        padding: 12px;
+      }
+      .btn {
+        width: 100%;
+        margin: 4px 0;
+      }
+      .card {
+        padding: 15px;
+        margin: 12px 0;
+      }
+      .main-btn {
+        width: 100%;
+        max-width: 220px;
+        height: 200px;
+      }
+      .sidebar-stats {
+        grid-template-columns: 1fr;
+      }
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+      .logo h1 {
+        font-size: 1.5rem;
+      }
+      .logo .tagline {
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="logo">
+      <h1>⚔️ YAKUZA DZ ⚔️</h1>
+      <div class="tagline">نظام إدارة العصابة · العقوبات · الفرق · القيادة</div>
+    </div>
+  </header>
+
+  <!-- شاشة الصيانة (عند إقفال النظام) -->
+  <div id="maintenanceScreen" class="maintenance-screen" style="display: none;">
+    <i class="fas fa-tools"></i>
+    <h2>⚠️ النظام معطل للصيانة</h2>
+    <p>يرجى الانتظار حتى يتم إعادة تشغيل النظام من قبل المسؤول.</p>
+    <p style="margin-top: 10px; font-size: 0.8rem; color: #ff8c00;">🔒 تم إقفال النظام</p>
+  </div>
+
+  <!-- الشاشة الرئيسية -->
+  <div id="mainScreen" class="main-screen">
+    <h2>مرحبًا بك في نظام إدارة العصابة</h2>
+    <p>اختر واحدة من الخيارات للبدء</p>
+    <div class="button-container">
+      <div class="main-btn" onclick="showLeaderLogin()">
+        <i class="fas fa-user-tie"></i>
+        <h2>أنا القائد</h2>
+        <p>إدارة الفرق والعقوبات</p>
+      </div>
+      <div class="main-btn" onclick="showMemberLogin()">
+        <i class="fas fa-user-secret"></i>
+        <h2>أنا العضو</h2>
+        <p>دخول بالاسم أو بالكود</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================== لوحة القائد ================== -->
+  <div id="leaderSection" class="page" style="display: none;">
+    <div class="flex-between">
+      <h2><i class="fas fa-crown"></i> لوحة القائد الأعلى</h2>
+      <button class="btn btn-outline" onclick="showMain()">رجوع</button>
+    </div>
+    <div id="leaderAuthForm" class="card">
+      <h3>🔐 دخول القائد</h3>
+      <div class="form-group">
+        <label for="leaderCode">كود الدخول</label>
+        <input type="password" id="leaderCode" class="form-control" maxlength="5">
+      </div>
+      <button class="btn" onclick="checkLeaderCode()">دخول</button>
+      <div id="leaderError" class="alert alert-error hidden"></div>
+    </div>
+    <div id="leaderDashboard" class="hidden">
+      <div class="leader-sidebar">
+        <h3>📊 إحصائيات العصابة</h3>
+        <div class="sidebar-stats">
+          <div class="stat-box"><div class="stat-number" id="statTeams">0</div><div class="stat-label">الفرق</div></div>
+          <div class="stat-box"><div class="stat-number" id="statMembers">0</div><div class="stat-label">الأعضاء</div></div>
+          <div class="stat-box"><div class="stat-number" id="statBanned">0</div><div class="stat-label">مطرودون</div></div>
+        </div>
+        <button class="btn btn-sm btn-outline" onclick="renderLeaderDashboard()" style="margin-top:12px;">تحديث</button>
+      </div>
+
+      <div class="card"><h3>➕ إضافة فريق جديد</h3><div class="flex-row"><input type="text" id="newTeamName" class="form-control" placeholder="اسم الفريق"><input type="text" id="newTeamDesc" class="form-control" placeholder="وصف الفرقة"></div><button class="btn btn-success" onclick="createTeam()">إضافة فريق</button></div>
+      <div class="card"><h3>🏢 الفرق</h3><div id="teamsContainer" class="grid-2"></div></div>
+      <div class="card"><h3>➕ إضافة عضو عادي</h3><div class="flex-row"><input type="text" id="newMemberName" class="form-control" placeholder="اسم العضو"><select id="newMemberTeamSelect" class="form-control"></select></div><button class="btn btn-success" onclick="addNormalMember()">إضافة عضو</button></div>
+      <div class="card"><h3>⚡ الطرد اليدوي الفوري</h3><div class="flex-row"><input type="text" id="manualBanName" class="form-control" placeholder="اسم العضو"><button class="btn btn-danger" onclick="manualInstantBan()">طرد فوري</button></div></div>
+      <div class="card"><h3>🚫 المطرودون</h3><div id="bannedListContainer"></div></div>
+      <div class="card"><h3>🖤 القائمة السوداء</h3><div id="blacklistContainer"></div><div class="flex-row"><input type="text" id="blacklistName" class="form-control" placeholder="اسم العضو"><button class="btn btn-warning" onclick="addToBlacklist()">➕ إضافة</button></div></div>
+      <div class="card"><h3>👥 جميع الأعضاء</h3><div id="allMembersContainer"></div></div>
+    </div>
+  </div>
+
+  <!-- ================== لوحة العضو ================== -->
+  <div id="memberSection" class="page" style="display: none;">
+    <div class="flex-between">
+      <h2><i class="fas fa-user-astronaut"></i> لوحة العضو</h2>
+      <button class="btn btn-outline" onclick="showMain()">رجوع</button>
+    </div>
+    <div id="memberAuthForm" class="card">
+      <h3>🔐 دخول العضو</h3>
+      <p style="font-size:0.8rem; margin-bottom:10px;">الأعضاء العاديون: اسم فقط<br>القادة/النواب/الإدارة: اسم + الكود السري</p>
+      <div class="form-group"><input type="text" id="memberLoginName" class="form-control" placeholder="اسم المستخدم"></div>
+      <div class="form-group"><input type="text" id="memberLoginCode" class="form-control" placeholder="الكود السري (اختياري)"></div>
+      <button class="btn" onclick="checkMemberLogin()">دخول</button>
+      <div id="memberError" class="alert alert-error hidden"></div>
+    </div>
+    <div id="memberDashboard" class="hidden">
+      <div class="card"><h3>📄 ملفي الشخصي</h3><div id="profileInfo"></div></div>
+      <div id="manageTeamCard" class="card" style="display:none;">
+        <h3>🔱 إدارة فريقي (عقوبات)</h3>
+        <div id="teamMembersList"></div>
+        <div class="flex-row"><select id="punishMemberSelect" class="form-control"></select><button class="btn btn-warning" onclick="warnMember()">🔨 توبيخ +1</button><button class="btn btn-danger" onclick="instantBanMember()">⚡ طرد فوري</button></div>
+        <div class="flex-row" style="margin-top:10px;"><button class="btn btn-danger" onclick="blacklistSelectedMember()" id="blacklistMemberBtn">🖤 إضافة العضو المختار للقائمة السوداء</button></div>
+        <p style="color:var(--gray); font-size:0.7rem; margin-top:6px;">ملاحظة: النواب والإدارة لهم صلاحيات حسب الرتبة.</p>
+      </div>
+      <div class="card"><h3>🚫 المطرودون</h3><div id="memberBannedList"></div></div>
+      <div class="card"><h3>🖤 القائمة السوداء</h3><div id="memberBlacklist"></div></div>
+      <button class="btn btn-danger" onclick="logoutMember()">تسجيل خروج</button>
+    </div>
+  </div>
+
+  <footer>© 2026 YAKUZA DZ · جميع الحقوق محفوظة</footer>
+</div>
+<div id="toast" class="toast" style="display:none;"></div>
+
+<script>
+  // ================== إعدادات Supabase ==================
+  const SUPABASE_URL = 'https://ctcfknyxeiwewkkcglgv.supabase.co';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN0Y2Zrbnl4ZWl3ZXdra2NnbGd2Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NzIzNzA3NywiZXhwIjoyMDkyODEzMDc3fQ.0ifVImQG1zyrCFH_oIU_yNyfNMsEnGIQI2IHI6ZENhM';
+
+  // دوال الاتصال بقاعدة البيانات
+  async function supabaseFetch(endpoint, method = 'GET', data = null) {
+    const url = `${SUPABASE_URL}/rest/v1/${endpoint}`;
+    const options = {
+      method,
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=representation'
+      }
+    };
+    if (data) options.body = JSON.stringify(data);
+    try {
+      const response = await fetch(url, options);
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+      return await response.json();
+    } catch (error) {
+      console.error('Supabase error:', error);
+      return null;
+    }
+  }
+
+  // حالة النظام والاتصال
+  let systemLocked = false;
+  let currentMember = null;
+  let online = navigator.onLine;
+
+  // التحقق من حالة النظام من قاعدة البيانات
+  async function checkSystemStatus() {
+    const settings = await supabaseFetch('system_settings?key=eq.system_locked&select=value');
+    if (settings && settings.length > 0) {
+      systemLocked = settings[0].value === 'true';
+    } else {
+      // إعداد افتراضي
+      await supabaseFetch('system_settings', 'POST', { key: 'system_locked', value: 'false' });
+      systemLocked = false;
+    }
+    updateSystemUI();
+  }
+
+  // تحديث واجهة النظام (شاشة الصيانة)
+  function updateSystemUI() {
+    const maintenanceDiv = document.getElementById('maintenanceScreen');
+    const mainScreenDiv = document.getElementById('mainScreen');
+    if (systemLocked) {
+      maintenanceDiv.style.display = 'flex';
+      mainScreenDiv.style.display = 'none';
+      document.getElementById('leaderSection').style.display = 'none';
+      document.getElementById('memberSection').style.display = 'none';
+    } else {
+      maintenanceDiv.style.display = 'none';
+      mainScreenDiv.style.display = 'block';
+    }
+  }
+
+  // إقفال/فتح النظام (لصاحب التطبيق)
+  async function lockSystem() {
+    await supabaseFetch('system_settings?key=eq.system_locked', 'PATCH', { value: 'true' });
+    systemLocked = true;
+    updateSystemUI();
+    showToast('🔒 تم إقفال النظام (حالة تمرد)', 'error');
+  }
+  async function unlockSystem() {
+    await supabaseFetch('system_settings?key=eq.system_locked', 'PATCH', { value: 'false' });
+    systemLocked = false;
+    updateSystemUI();
+    showToast('✅ تم فتح النظام', 'success');
+  }
+
+  // ================== دوال الفرق والأعضاء ==================
+  async function loadTeams() {
+    return await supabaseFetch('teams?order=id.asc');
+  }
+  async function loadMembers() {
+    return await supabaseFetch('members?order=id.asc');
+  }
+  async function loadBanned() {
+    return await supabaseFetch('banned?order=id.asc');
+  }
+  async function loadBlacklist() {
+    return await supabaseFetch('blacklist?order=id.asc');
+  }
+
+  async function addTeam(name, description) {
+    const teams = await loadTeams();
+    const newId = Date.now();
+    const newTeam = { id: newId, name, description: description || '', leader_id: null, deputy_ids: [], member_ids: [] };
+    await supabaseFetch('teams', 'POST', newTeam);
+    return newTeam;
+  }
+
+  async function deleteTeam(teamId) {
+    await supabaseFetch(`teams?id=eq.${teamId}`, 'DELETE');
+    // تحديث الأعضاء الذين كانوا في هذا الفريق
+    const members = await loadMembers();
+    for (let m of members) {
+      if (m.team_id === teamId) {
+        await supabaseFetch(`members?id=eq.${m.id}`, 'PATCH', { team_id: null });
+      }
+    }
+  }
+
+  async function addMember(name, teamId) {
+    const members = await loadMembers();
+    if (members.some(m => m.name === name)) return null;
+    const newId = Date.now();
+    const newMember = { id: newId, name, team_id: teamId, rank: 'member', warns: 0, login_code: null, login_used: false };
+    await supabaseFetch('members', 'POST', newMember);
+    // إضافة العضو إلى قائمة أعضاء الفريق
+    const teams = await loadTeams();
+    const team = teams.find(t => t.id === teamId);
+    if (team) {
+      const memberIds = team.member_ids || [];
+      memberIds.push(newId);
+      await supabaseFetch(`teams?id=eq.${teamId}`, 'PATCH', { member_ids: memberIds });
+    }
+    return newMember;
+  }
+
+  async function updateTeam(teamId, updates) {
+    await supabaseFetch(`teams?id=eq.${teamId}`, 'PATCH', updates);
+  }
+
+  async function addToBlacklist(name) {
+    const blacklist = await loadBlacklist();
+    if (blacklist.some(b => b.name === name)) return false;
+    const newId = Date.now();
+    await supabaseFetch('blacklist', 'POST', { id: newId, name });
+    return true;
+  }
+
+  async function removeFromBlacklist(name) {
+    await supabaseFetch(`blacklist?name=eq.${name}`, 'DELETE');
+  }
+
+  async function banMember(memberId, memberName, originalTeamId) {
+    await supabaseFetch('banned', 'POST', { id: memberId, name: memberName, original_team_id: originalTeamId });
+    await supabaseFetch(`members?id=eq.${memberId}`, 'DELETE');
+    // إزالة من الفريق
+    const teams = await loadTeams();
+    const team = teams.find(t => t.id === originalTeamId);
+    if (team) {
+      let memberIds = team.member_ids || [];
+      memberIds = memberIds.filter(id => id !== memberId);
+      if (team.leader_id === memberId) await supabaseFetch(`teams?id=eq.${team.id}`, 'PATCH', { leader_id: null, member_ids: memberIds });
+      else await supabaseFetch(`teams?id=eq.${team.id}`, 'PATCH', { member_ids: memberIds });
+      if (team.deputy_ids && team.deputy_ids.includes(memberId)) {
+        let deputyIds = team.deputy_ids.filter(id => id !== memberId);
+        await supabaseFetch(`teams?id=eq.${team.id}`, 'PATCH', { deputy_ids: deputyIds });
+      }
+    }
+  }
+
+  async function unbanMember(banId) {
+    await supabaseFetch(`banned?id=eq.${banId}`, 'DELETE');
+  }
+
+  async function warnMember(memberId, executorId, executorName) {
+    const members = await loadMembers();
+    const target = members.find(m => m.id === memberId);
+    if (!target) return;
+    const newWarns = (target.warns || 0) + 1;
+    await supabaseFetch(`members?id=eq.${memberId}`, 'PATCH', { warns: newWarns });
+    if (newWarns >= 3) {
+      await banMember(memberId, target.name, target.team_id);
+      showToast(`${target.name} طرد تلقائياً لبلوغ 3 توبيخات`, 'error');
+    } else {
+      showToast(`تم توبيخ ${target.name} (${newWarns}/3)`, 'warning');
+    }
+  }
+
+  async function instantBanMember(memberId, executorId, executorName) {
+    const members = await loadMembers();
+    const target = members.find(m => m.id === memberId);
+    if (target) {
+      await banMember(memberId, target.name, target.team_id);
+      showToast(`تم طرد ${target.name} فورياً`, 'error');
+    }
+  }
+
+  // ================== دوال واجهة القائد ==================
+  async function renderLeaderDashboard() {
+    const teams = await loadTeams();
+    const members = await loadMembers();
+    const banned = await loadBanned();
+    const blacklist = await loadBlacklist();
+
+    document.getElementById('statTeams').innerText = teams.length;
+    document.getElementById('statMembers').innerText = members.filter(m => m.id !== 1).length;
+    document.getElementById('statBanned').innerText = banned.length;
+
+    const teamsDiv = document.getElementById('teamsContainer');
+    teamsDiv.innerHTML = teams.map(t => {
+      const leader = members.find(m => m.id === t.leader_id);
+      const deputies = (t.deputy_ids || []).map(id => members.find(m => m.id === id)?.name).filter(n => n);
+      const teamMembers = (t.member_ids || []).map(id => members.find(m => m.id === id)).filter(m => m);
+      const otherMembers = teamMembers.filter(m => m.id !== t.leader_id && !(t.deputy_ids || []).includes(m.id));
+      return `<div class="team-card">
+        <div class="team-name">🏢 ${t.name}</div>
+        <div class="team-description">${t.description || 'لا يوجد وصف'}</div>
+        <div><i class="fas fa-crown"></i> القائد: ${leader ? leader.name + (leader.login_code ? ` <span class="badge">كود: ${leader.login_code}</span>` : '') : 'شاغر'}</div>
+        <div><i class="fas fa-users"></i> النواب: ${deputies.length ? deputies.join(', ') : 'لا يوجد'}</div>
+        <div class="team-members-title">👥 الأعضاء (${otherMembers.length})</div>
+        <div class="team-members-list">${otherMembers.length ? otherMembers.map(m => `<div class="member-name-item"><i class="fas fa-user"></i> ${m.name}</div>`).join('') : '<div>لا يوجد أعضاء</div>'}</div>
+        <div class="team-actions"><button class="btn btn-sm btn-warning" onclick="openEditTeamModal(${t.id})">تعديل</button><button class="btn btn-sm btn-danger" onclick="deleteTeamConfirm(${t.id})">حذف</button></div>
+      </div>`;
+    }).join('');
+    if (teams.length === 0) teamsDiv.innerHTML = '<div class="member-card-simple">📭 لا توجد فرق</div>';
+
+    document.getElementById('newMemberTeamSelect').innerHTML = teams.map(t => `<option value="${t.id}">${t.name}</option>`).join('');
+    document.getElementById('bannedListContainer').innerHTML = banned.map(b => `<div class="member-card-simple">🚫 <strong>${b.name}</strong> <button class="btn btn-sm btn-success" onclick="unbanMemberConfirm(${b.id})">إلغاء الطرد</button></div>`).join('') || '<div class="member-card-simple">📭 لا يوجد مطرودون</div>';
+    document.getElementById('blacklistContainer').innerHTML = blacklist.map(b => `<div class="member-card-simple">🖤 <strong>${b.name}</strong> <button class="btn btn-sm btn-danger" onclick="removeFromBlacklistConfirm('${b.name}')">إزالة</button></div>`).join('') || '<div class="member-card-simple">📭 لا توجد قائمة سوداء</div>';
+    document.getElementById('allMembersContainer').innerHTML = members.filter(m => m.id !== 1).map(m => `<div class="member-card-simple">👤 <strong>${m.name}</strong> (${getRankName(m.rank)}) - فريق: ${teams.find(t => t.id === m.team_id)?.name || 'بدون'} ${m.login_code ? `🔑 كود: ${m.login_code}` : ''}</div>`).join('') || '<div class="member-card-simple">📭 لا يوجد أعضاء</div>';
+  }
+
+  async function createTeam() {
+    const name = document.getElementById('newTeamName').value.trim();
+    const desc = document.getElementById('newTeamDesc').value.trim();
+    if (!name) return showToast('أدخل اسم الفريق', 'error');
+    await addTeam(name, desc);
+    await renderLeaderDashboard();
+    showToast(`تم إنشاء فريق ${name}`);
+    document.getElementById('newTeamName').value = '';
+    document.getElementById('newTeamDesc').value = '';
+  }
+
+  async function deleteTeamConfirm(id) {
+    if (confirm('حذف الفريق سيؤدي إلى نقل أعضائه خارج الفريق؟')) {
+      await deleteTeam(id);
+      await renderLeaderDashboard();
+      showToast('تم حذف الفريق');
+    }
+  }
+
+  async function addNormalMember() {
+    const name = document.getElementById('newMemberName').value.trim();
+    const teamId = parseInt(document.getElementById('newMemberTeamSelect').value);
+    if (!name) return showToast('أدخل الاسم', 'error');
+    const result = await addMember(name, teamId);
+    if (result) {
+      await renderLeaderDashboard();
+      showToast(`تم إضافة ${name}`);
+      document.getElementById('newMemberName').value = '';
+    } else {
+      showToast('الاسم موجود مسبقاً', 'error');
+    }
+  }
+
+  async function manualInstantBan() {
+    const name = document.getElementById('manualBanName').value.trim();
+    if (!name) return showToast('أدخل الاسم', 'error');
+    const members = await loadMembers();
+    const member = members.find(m => m.name === name);
+    if (!member) return showToast('لا يوجد عضو', 'error');
+    if (member.id === 1) return showToast('لا يمكن طرد القائد الأعلى', 'error');
+    if (confirm(`طرد ${member.name} فورياً؟`)) {
+      await banMember(member.id, member.name, member.team_id);
+      await renderLeaderDashboard();
+      showToast(`تم طرد ${member.name}`);
+      document.getElementById('manualBanName').value = '';
+    }
+  }
+
+  async function unbanMemberConfirm(banId) {
+    await unbanMember(banId);
+    await renderLeaderDashboard();
+    showToast('تم إلغاء الطرد');
+  }
+
+  async function addToBlacklistLeader() {
+    const name = document.getElementById('blacklistName').value.trim();
+    if (!name) return;
+    const success = await addToBlacklist(name);
+    if (success) {
+      await renderLeaderDashboard();
+      showToast(`تمت إضافة ${name} للقائمة السوداء`);
+      document.getElementById('blacklistName').value = '';
+    } else {
+      showToast('الاسم موجود', 'error');
+    }
+  }
+
+  async function removeFromBlacklistConfirm(name) {
+    await removeFromBlacklist(name);
+    await renderLeaderDashboard();
+    showToast('تمت الإزالة');
+  }
+
+  // نافذة تعديل الفريق
+  let editTeamId = null;
+  let tempLeader = null;
+  let tempDeputies = [];
+  let tempMembers = [];
+
+  async function openEditTeamModal(teamId) {
+    editTeamId = teamId;
+    const teams = await loadTeams();
+    const members = await loadMembers();
+    const blacklist = await loadBlacklist();
+    const team = teams.find(t => t.id === teamId);
+    if (!team) return;
+    tempLeader = team.leader_id;
+    tempDeputies = [...(team.deputy_ids || [])];
+    tempMembers = [...(team.member_ids || [])];
+    const available = members.filter(m => m.id !== 1 && !blacklist.some(bl => bl.name === m.name));
+    
+    const modal = document.createElement('div');
+    modal.id = 'editTeamModal';
+    modal.className = 'modal';
+    modal.style.display = 'flex';
+    modal.innerHTML = `
+      <div class="modal-content">
+        <h3>✏️ تعديل الفريق: ${team.name}</h3>
+        <div class="form-group"><label>📝 وصف الفريق</label><input type="text" id="editTeamDesc" class="form-control" value="${team.description || ''}"></div>
+        <div class="form-group"><label>👑 قائد الفريق (اختر واحد فقط)</label><div class="flex-row"><select id="leaderSelect" class="form-control"><option value="">-- اختر قائداً --</option>${available.map(m => `<option value="${m.id}" ${tempLeader === m.id ? 'selected' : ''}>${m.name} (${getRankName(m.rank)})</option>`).join('')}</select><button type="button" class="btn btn-sm btn-success" onclick="saveLeader()">تعيين القائد</button></div><div class="selected-items" id="leaderDisplay">${tempLeader ? `<span class="selected-tag">${members.find(m => m.id === tempLeader)?.name} <span class="remove-tag" onclick="removeLeaderTemp()">✖</span></span>` : '<span style="color:gray;">لم يتم اختيار قائد بعد</span>'}</div></div>
+        <div class="form-group"><label>🗡️ النواب (حد أقصى 2)</label><div class="flex-row"><select id="deputySelect" class="form-control"><option value="">-- اختر نائباً --</option>${available.filter(m => m.id !== tempLeader).map(m => `<option value="${m.id}">${m.name} (${getRankName(m.rank)})</option>`).join('')}</select><button type="button" class="btn btn-sm btn-success" onclick="addDeputyTemp()">➕ إضافة نائب</button></div><div class="selected-items" id="deputiesDisplay">${tempDeputies.map(did => `<span class="selected-tag">${members.find(m => m.id === did)?.name} <span class="remove-tag" onclick="removeDeputyTemp(${did})">✖</span></span>`).join('') || '<span style="color:gray;">لم يتم اختيار نواب بعد</span>'}</div><div class="limit-alert">⚠️ الحد الأقصى 2</div></div>
+        <div class="form-group"><label>👥 الأعضاء العاديون</label><div class="flex-row"><select id="memberSelect" class="form-control"><option value="">-- اختر عضواً --</option>${available.filter(m => m.id !== tempLeader && !tempDeputies.includes(m.id)).map(m => `<option value="${m.id}">${m.name} (${getRankName(m.rank)})</option>`).join('')}</select><button type="button" class="btn btn-sm btn-success" onclick="addMemberTemp()">➕ إضافة عضو</button></div><div class="selected-items" id="membersDisplay">${tempMembers.filter(mid => mid !== tempLeader && !tempDeputies.includes(mid)).map(mid => `<span class="selected-tag">${members.find(m => m.id === mid)?.name} <span class="remove-tag" onclick="removeMemberTemp(${mid})">✖</span></span>`).join('') || '<span style="color:gray;">لم يتم اختيار أعضاء بعد</span>'}</div></div>
+        <div class="flex-row"><button class="btn btn-success" onclick="saveTeamEdit()">💾 حفظ التعديلات</button><button class="btn btn-outline" onclick="closeEditModal()">❌ إلغاء</button></div>
+      </div>`;
+    let old = document.getElementById('editTeamModal');
+    if (old) old.remove();
+    document.body.appendChild(modal);
+  }
+
+  async function saveLeader() {
+    const id = parseInt(document.getElementById('leaderSelect').value);
+    if (!id) return showToast('اختر قائداً', 'error');
+    if (tempLeader !== null) return showToast('لا يمكن اختيار أكثر من قائد', 'error');
+    tempLeader = id;
+    const members = await loadMembers();
+    document.getElementById('leaderDisplay').innerHTML = `<span class="selected-tag">${members.find(m => m.id === id)?.name} <span class="remove-tag" onclick="removeLeaderTemp()">✖</span></span>`;
+    showToast('تم اختيار القائد');
+  }
+
+  async function addDeputyTemp() {
+    const id = parseInt(document.getElementById('deputySelect').value);
+    if (!id) return showToast('اختر نائباً', 'error');
+    if (tempDeputies.length >= 2) return showToast('الحد الأقصى 2', 'error');
+    if (tempDeputies.includes(id)) return showToast('مضاف مسبقاً', 'error');
+    tempDeputies.push(id);
+    const members = await loadMembers();
+    document.getElementById('deputiesDisplay').innerHTML = tempDeputies.map(did => `<span class="selected-tag">${members.find(m => m.id === did)?.name} <span class="remove-tag" onclick="removeDeputyTemp(${did})">✖</span></span>`).join('');
+    showToast('تم إضافة النائب');
+  }
+
+  async function addMemberTemp() {
+    const id = parseInt(document.getElementById('memberSelect').value);
+    if (!id) return showToast('اختر عضواً', 'error');
+    if (tempMembers.includes(id)) return showToast('مضاف مسبقاً', 'error');
+    tempMembers.push(id);
+    const members = await loadMembers();
+    document.getElementById('membersDisplay').innerHTML = tempMembers.filter(mid => mid !== tempLeader && !tempDeputies.includes(mid)).map(mid => `<span class="selected-tag">${members.find(m => m.id === mid)?.name} <span class="remove-tag" onclick="removeMemberTemp(${mid})">✖</span></span>`).join('');
+    showToast('تم إضافة العضو');
+  }
+
+  function removeLeaderTemp() {
+    tempLeader = null;
+    document.getElementById('leaderDisplay').innerHTML = '<span style="color:gray;">لم يتم اختيار قائد بعد</span>';
+    showToast('تم إزالة القائد');
+  }
+
+  function removeDeputyTemp(id) {
+    tempDeputies = tempDeputies.filter(d => d !== id);
+    document.getElementById('deputiesDisplay').innerHTML = tempDeputies.map(did => `<span class="selected-tag">${did}</span>`).join('') || '<span style="color:gray;">لم يتم اختيار نواب بعد</span>';
+    showToast('تم إزالة النائب');
+  }
+
+  function removeMemberTemp(id) {
+    tempMembers = tempMembers.filter(m => m !== id);
+    document.getElementById('membersDisplay').innerHTML = tempMembers.filter(mid => mid !== tempLeader && !tempDeputies.includes(mid)).map(mid => `<span class="selected-tag">${mid}</span>`).join('') || '<span style="color:gray;">لم يتم اختيار أعضاء بعد</span>';
+    showToast('تم إزالة العضو');
+  }
+
+  async function saveTeamEdit() {
+    const teams = await loadTeams();
+    const members = await loadMembers();
+    const team = teams.find(t => t.id === editTeamId);
+    if (!team) return;
+    const newDesc = document.getElementById('editTeamDesc').value;
+    
+    // إزالة الرتب القديمة
+    if (team.leader_id) {
+      const oldLeader = members.find(m => m.id === team.leader_id);
+      if (oldLeader && oldLeader.rank !== 'leader_supreme') await supabaseFetch(`members?id=eq.${oldLeader.id}`, 'PATCH', { rank: 'member' });
+    }
+    for (let did of (team.deputy_ids || [])) {
+      const dep = members.find(m => m.id === did);
+      if (dep && dep.rank !== 'leader_supreme') await supabaseFetch(`members?id=eq.${dep.id}`, 'PATCH', { rank: 'member' });
+    }
+    
+    // تعيين الرتب الجديدة
+    if (tempLeader) {
+      const leader = members.find(m => m.id === tempLeader);
+      if (leader) {
+        await supabaseFetch(`members?id=eq.${leader.id}`, 'PATCH', { rank: 'team_leader' });
+        if (!leader.login_code) {
+          const newCode = Math.floor(10000 + Math.random() * 90000).toString();
+          await supabaseFetch(`members?id=eq.${leader.id}`, 'PATCH', { login_code: newCode });
+          showToast(`🔑 كود القائد ${leader.name}: ${newCode}`);
+        }
+      }
+    }
+    for (let did of tempDeputies) {
+      const dep = members.find(m => m.id === did);
+      if (dep) {
+        await supabaseFetch(`members?id=eq.${dep.id}`, 'PATCH', { rank: 'team_deputy' });
+        if (!dep.login_code) {
+          const newCode = Math.floor(10000 + Math.random() * 90000).toString();
+          await supabaseFetch(`members?id=eq.${dep.id}`, 'PATCH', { login_code: newCode });
+          showToast(`🔑 كود النائب ${dep.name}: ${newCode}`);
+        }
+      }
+    }
+    
+    // تحديث الفريق
+    await supabaseFetch(`teams?id=eq.${editTeamId}`, 'PATCH', {
+      description: newDesc,
+      leader_id: tempLeader,
+      deputy_ids: tempDeputies,
+      member_ids: tempMembers
+    });
+    
+    closeEditModal();
+    await renderLeaderDashboard();
+    showToast('✅ تم حفظ التعديلات');
+  }
+
+  function closeEditModal() {
+    document.getElementById('editTeamModal')?.remove();
+    editTeamId = null;
+  }
+
+  // ================== دوال العضو ==================
+  function getRankName(rank) {
+    if (rank === 'leader_supreme') return '👑 القائد الأعلى';
+    if (rank === 'admin') return '⭐ إدارة';
+    if (rank === 'deputy_supreme') return '🔱 نائب القائد العام';
+    if (rank === 'team_leader') return '⚔️ قائد فريق';
+    if (rank === 'team_deputy') return '🗡️ نائب فريق';
+    return '🎖️ عضو';
+  }
+
+  async function checkMemberLogin() {
+    const name = document.getElementById('memberLoginName').value.trim();
+    const code = document.getElementById('memberLoginCode').value.trim();
+    const members = await loadMembers();
+    const banned = await loadBanned();
+    const blacklist = await loadBlacklist();
+    const member = members.find(m => m.name === name);
+    if (!member) { showMemberError('اسم غير موجود'); return; }
+    if (banned.some(b => b.id === member.id)) { showMemberError('هذا العضو مطرود'); return; }
+    if (blacklist.some(bl => bl.name === member.name)) { showMemberError('في القائمة السوداء'); return; }
+    const special = ['team_leader', 'team_deputy', 'admin', 'deputy_supreme'];
+    const isSpecial = special.includes(member.rank);
+    if (!isSpecial && code !== '') { showMemberError('لا يتطلب كوداً'); return; }
+    if (isSpecial && member.login_code !== code) { showMemberError('الكود السري غير صحيح'); return; }
+    currentMember = member;
+    document.getElementById('memberAuthForm').style.display = 'none';
+    document.getElementById('memberDashboard').classList.remove('hidden');
+    renderMemberDashboard();
+    showToast(`مرحباً ${member.name}`);
+  }
+
+  function showMemberError(msg) {
+    const div = document.getElementById('memberError');
+    div.classList.remove('hidden');
+    div.innerHTML = msg;
+  }
+
+  async function renderMemberDashboard() {
+    if (!currentMember) return;
+    const members = await loadMembers();
+    const teams = await loadTeams();
+    const banned = await loadBanned();
+    const blacklist = await loadBlacklist();
+    const cur = members.find(m => m.id === currentMember.id);
+    if (!cur || banned.some(b => b.id === cur.id) || blacklist.some(bl => bl.name === cur.name)) { logoutMember(); return; }
+    currentMember = cur;
+    const myTeam = teams.find(t => t.id === currentMember.team_id);
+    const isBlacklisted = blacklist.some(b => b.name === currentMember.name);
+    const isBanned = banned.some(b => b.id === currentMember.id);
+    document.getElementById('profileInfo').innerHTML = `
+      <div class="flex-between"><span>👤 الاسم:</span><strong>${currentMember.name}</strong></div>
+      <div class="flex-between"><span>🏢 الفريق:</span><strong>${myTeam ? myTeam.name : 'بدون فريق'}</strong></div>
+      <div class="flex-between"><span>🏅 الرتبة:</span><strong>${getRankName(currentMember.rank)}</strong></div>
+      <div class="flex-between"><span>⚠️ التوبيخات:</span><span style="color:#f39c12;">${currentMember.warns}/3</span></div>
+      <div class="flex-between"><span>🖤 القائمة السوداء:</span><strong>${isBlacklisted ? 'نعم' : 'لا'}</strong></div>
+      <div class="flex-between"><span>🚫 حالة الطرد:</span><strong>${isBanned ? 'مطرود' : 'غير مطرود'}</strong></div>`;
+    
+    const teamMembers = myTeam ? members.filter(m => m.team_id === myTeam.id && !banned.some(b => b.id === m.id) && !blacklist.some(bl => bl.name === m.name) && m.id !== currentMember.id) : [];
+    const manageCard = document.getElementById('manageTeamCard');
+    if (['team_leader', 'team_deputy', 'admin', 'deputy_supreme'].includes(currentMember.rank) && myTeam && !banned.some(b => b.id === currentMember.id)) {
+      manageCard.style.display = 'block';
+      document.getElementById('teamMembersList').innerHTML = teamMembers.map(m => `<div class="member-card-simple">${m.name} (${getRankName(m.rank)}) - توبيخات: ${m.warns}/3</div>`).join('');
+      const select = document.getElementById('punishMemberSelect');
+      select.innerHTML = teamMembers.map(m => `<option value="${m.id}">${m.name}</option>`).join('');
+      if (teamMembers.length === 0) select.innerHTML = '<option>لا أعضاء</option>';
+      document.getElementById('blacklistMemberBtn').style.display = 'flex';
+    } else {
+      manageCard.style.display = 'none';
+    }
+    document.getElementById('memberBannedList').innerHTML = banned.map(b => `<div class="member-card-simple">🚫 ${b.name}</div>`).join('') || '<div>لا يوجد مطرودون</div>';
+    document.getElementById('memberBlacklist').innerHTML = blacklist.map(b => `<div class="member-card-simple">🖤 ${b.name}</div>`).join('') || '<div>لا توجد قائمة سوداء</div>';
+  }
+
+  async function warnMember() {
+    const select = document.getElementById('punishMemberSelect');
+    const mid = parseInt(select.value);
+    if (!mid) return;
+    await warnMember(mid, currentMember.id, currentMember.name);
+    await renderMemberDashboard();
+    await renderLeaderDashboard();
+  }
+
+  async function instantBanMemberAction() {
+    const select = document.getElementById('punishMemberSelect');
+    const mid = parseInt(select.value);
+    if (!mid) return;
+    if (confirm('طرد فوري؟')) {
+      await instantBanMember(mid, currentMember.id, currentMember.name);
+      await renderMemberDashboard();
+      await renderLeaderDashboard();
+    }
+  }
+
+  async function blacklistSelectedMember() {
+    const select = document.getElementById('punishMemberSelect');
+    const mid = parseInt(select.value);
+    if (!mid) return;
+    const members = await loadMembers();
+    const target = members.find(m => m.id === mid);
+    if (!target) return;
+    const blacklist = await loadBlacklist();
+    if (blacklist.some(b => b.name === target.name)) { showToast('موجود بالفعل', 'warning'); return; }
+    if (confirm(`إضافة "${target.name}" إلى القائمة السوداء؟`)) {
+      await addToBlacklist(target.name);
+      await renderMemberDashboard();
+      await renderLeaderDashboard();
+      showToast(`تمت إضافة ${target.name}`, 'success');
+    }
+  }
+
+  function logoutMember() {
+    currentMember = null;
+    showToast('تم تسجيل الخروج');
+    showMemberLogin();
+  }
+
+  // ================== التنقل ==================
+  function showMain() {
+    if (systemLocked) { updateSystemUI(); return; }
+    document.getElementById('mainScreen').style.display = 'block';
+    document.getElementById('leaderSection').style.display = 'none';
+    document.getElementById('memberSection').style.display = 'none';
+    currentMember = null;
+  }
+
+  function showLeaderLogin() {
+    document.getElementById('mainScreen').style.display = 'none';
+    document.getElementById('memberSection').style.display = 'none';
+    document.getElementById('leaderSection').style.display = 'block';
+    document.getElementById('leaderAuthForm').style.display = 'block';
+    document.getElementById('leaderDashboard').classList.add('hidden');
+    document.getElementById('leaderCode').value = '';
+    document.getElementById('leaderError').classList.add('hidden');
+  }
+
+  function showMemberLogin() {
+    document.getElementById('mainScreen').style.display = 'none';
+    document.getElementById('leaderSection').style.display = 'none';
+    document.getElementById('memberSection').style.display = 'block';
+    document.getElementById('memberAuthForm').style.display = 'block';
+    document.getElementById('memberDashboard').classList.add('hidden');
+    document.getElementById('memberLoginName').value = '';
+    document.getElementById('memberLoginCode').value = '';
+    document.getElementById('memberError').classList.add('hidden');
+  }
+
+  async function checkLeaderCode() {
+    const code = document.getElementById('leaderCode').value;
+    if (code === '30550') {
+      document.getElementById('leaderAuthForm').style.display = 'none';
+      document.getElementById('leaderDashboard').classList.remove('hidden');
+      await renderLeaderDashboard();
+      showToast('تم الدخول كقائد أعلى');
+    } else {
+      document.getElementById('leaderError').classList.remove('hidden');
+      document.getElementById('leaderError').innerHTML = 'الكود غير صحيح';
+      showToast('كود خاطئ', 'error');
+    }
+  }
+
+  // ================== لوحة صاحب التطبيق ==================
+  function showOwnerPanel() {
+    const modal = document.createElement('div');
+    modal.id = 'ownerPanel';
+    modal.className = 'modal';
+    modal.style.display = 'flex';
+    modal.innerHTML = `
+      <div class="modal-content">
+        <h3><i class="fas fa-tools"></i> لوحة التحكم الرئيسية</h3>
+        <div class="form-group"><label>🔒 حالة النظام</label><div class="flex-row"><span>${systemLocked ? '🔴 مقفل' : '🟢 عامل'}</span><button class="btn btn-sm ${systemLocked ? 'btn-success' : 'btn-danger'}" onclick="toggleSystemLock()">${systemLocked ? 'فتح النظام' : 'إقفال النظام (تمرد)'}</button></div></div>
+        <button class="btn btn-outline" onclick="closeOwnerPanel()">إغلاق</button>
+      </div>`;
+    let old = document.getElementById('ownerPanel');
+    if (old) old.remove();
+    document.body.appendChild(modal);
+  }
+
+  async function toggleSystemLock() {
+    if (systemLocked) await unlockSystem();
+    else await lockSystem();
+    closeOwnerPanel();
+    showOwnerPanel();
+  }
+
+  function closeOwnerPanel() {
+    document.getElementById('ownerPanel')?.remove();
+  }
+
+  // زر صاحب التطبيق
+  const ownerBtn = document.createElement('div');
+  ownerBtn.style.position = 'fixed';
+  ownerBtn.style.bottom = '15px';
+  ownerBtn.style.left = '15px';
+  ownerBtn.style.backgroundColor = 'rgba(0,0,0,0.7)';
+  ownerBtn.style.padding = '8px 14px';
+  ownerBtn.style.borderRadius = '40px';
+  ownerBtn.style.fontSize = '14px';
+  ownerBtn.style.cursor = 'pointer';
+  ownerBtn.style.zIndex = '9999';
+  ownerBtn.style.backdropFilter = 'blur(5px)';
+  ownerBtn.style.border = '1px solid #ff8c00';
+  ownerBtn.innerHTML = '<i class="fas fa-user-shield"></i> 🔧';
+  ownerBtn.onclick = () => {
+    const p = prompt('🔐 كود صاحب التطبيق:');
+    if (p === '30440') showOwnerPanel();
+    else if (p !== null) showToast('كود خاطئ', 'error');
+  };
+  document.body.appendChild(ownerBtn);
+
+  // ================== مراقبة الاتصال ==================
+  function updateConnectionStatus() {
+    const statusDiv = document.getElementById('connectionStatus');
+    if (statusDiv) {
+      if (online) statusDiv.innerHTML = '✅ الاتصال نشط';
+      else statusDiv.innerHTML = '📡 لا يوجد اتصال بالإنترنت';
+    }
+  }
+
+  window.addEventListener('online', () => {
+    online = true;
+    updateConnectionStatus();
+    showToast('تم استعادة الاتصال بالإنترنت', 'success');
+    checkSystemStatus();
+    if (document.getElementById('leaderDashboard') && !document.getElementById('leaderDashboard').classList.contains('hidden')) renderLeaderDashboard();
+    if (currentMember) renderMemberDashboard();
+  });
+  window.addEventListener('offline', () => {
+    online = false;
+    updateConnectionStatus();
+    showToast('لا يوجد اتصال بالإنترنت', 'error');
+  });
+
+  // بدء التشغيل
+  async function init() {
+    updateConnectionStatus();
+    await checkSystemStatus();
+    // تحديث تلقائي كل 3 ثوانٍ
+    setInterval(async () => {
+      if (online && !systemLocked) {
+        if (document.getElementById('leaderDashboard') && !document.getElementById('leaderDashboard').classList.contains('hidden')) {
+          await renderLeaderDashboard();
+        }
+        if (currentMember && document.getElementById('memberDashboard') && !document.getElementById('memberDashboard').classList.contains('hidden')) {
+          await renderMemberDashboard();
+        }
+      }
+    }, 3000);
+  }
+  init();
+</script>
+</body>
+</html>
